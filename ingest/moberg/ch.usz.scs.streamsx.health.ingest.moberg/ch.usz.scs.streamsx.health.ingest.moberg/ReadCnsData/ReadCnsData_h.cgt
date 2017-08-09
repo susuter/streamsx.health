@@ -83,14 +83,14 @@ private:
 		  const std::string& aspect,
 		  const std::string& timestamp,
 		  const std::string& unit,
-		  const float& value);
+		  const float32& value);
   
   void sendMeasurementTupleInt(
 		  const std::string& mrn, 
 		  const std::string& aspect,
 		  const std::string& timestamp,
 		  const std::string& unit,
-		  const int& value);
+		  const in32t& value);
   
 
   void submitEventTuples(CNSDataAccess::CPayload& payload);
