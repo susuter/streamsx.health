@@ -357,7 +357,6 @@ void MY_OPERATOR::processCompositeMeasurements(
 	// FIXME: do template function
 	if (valueType == 1) {
 		float32* data = (float32*)payload.IntCompositeSet(i);
-		float32 value2;
 		for (int j = 0; j < numComposites; j++) {
 			float32& value = data[j];
 
@@ -367,23 +366,22 @@ void MY_OPERATOR::processCompositeMeasurements(
 								(compositeElements)[j],		
 								correctedTimestamp,		
 								units,
-								convertSampleSeriesValue(value, m, b));
+								value2);
 		}
 	}
 	else if (valueType == 2) {
 
 		int32* data = (int32*)payload.IntCompositeSet(i);
-		int32 value2;
 		for (int j = 0; j < numComposites; j++) {
 			int32& value = data[j];
 
-			value2 = convertSampleSeriesValueInt(value, m, b);
+			int32 value2 = convertSampleSeriesValueInt(value, m, b);
 			SPLAPPTRC(L_TRACE, "Sending composite tuple '" << j << "' with value '" << value2 << "'", "");
 			sendMeasurementTupleInt(current_context_->medicalRecordNumber, 
 								(compositeElements)[j],		
 								correctedTimestamp,		
 								units,
-								convertSampleSeriesValueInt(value, m, b));
+								value2);
 			
 		}
 	}
@@ -403,21 +401,21 @@ void MY_OPERATOR::processMeasurements(
 
 	if (payload.Type() == CNSDataAccess::FLOAT_AGGREGATE) {
 		float32 value = payload.FloatData()[i];
-		value = convertSampleSeriesValue(value, m, b);
+		float32 value2 = convertSampleSeriesValue(value, m, b);
 		sendMeasurementTuple(current_context_->medicalRecordNumber, 
 							payload.Aspects().baseTypeString(),
 							correctedTimestamp,
 							units,
-							value);
+							value2);
 		
 	} else if (payload.Type() == CNSDataAccess::INTEGER_AGGREGATE) {
-		int value = payload.IntData()[i];
-
+		int32 value = payload.IntData()[i];
+		int32 value2 = convertSampleSeriesValueInt(value, m, b));
 		sendMeasurementTuple(current_context_->medicalRecordNumber, 
 							payload.Aspects().baseTypeString(),
 							correctedTimestamp,
 							units,
-							convertSampleSeriesValueInt(value, m, b));
+							value2);
 	} else if (payload.Type() == CNSDataAccess::COMPOSITE_AGGREGATE) {
 		processCompositeMeasurements(
 				dataSettingsFile, 
@@ -437,7 +435,7 @@ void MY_OPERATOR::sendMeasurementTupleInt(
 		  const std::string& aspect,
 		  const std::string& timestamp,
 		  const std::string& unit,
-		  const int& value)  {
+		  const int32& value)  {
 	
 	OPort0Type tuple;
 
@@ -457,7 +455,7 @@ void MY_OPERATOR::sendMeasurementTuple(
 		  const std::string& aspect,
 		  const std::string& timestamp,
 		  const std::string& unit,
-		  const float& value)  {
+		  const float32& value)  {
 	
 	OPort0Type tuple;
 
